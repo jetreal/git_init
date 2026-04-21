@@ -1,0 +1,692 @@
+/* ============================================
+   Nason Lab v4.8 — Стили приложения
+   ============================================ */
+
+:root {
+    --bg: #ffffff;
+    --bg-light: #f9f9f9;
+    --bg-section: #f9f9f9;
+    --bg-table: #ffffff;
+    --bg-th: #eeeeee;
+    --bg-input: #ffffff;
+    --bg-quick-tests: linear-gradient(135deg, #fff9c4, #fff3e0);
+    --bg-quick-tests-btn: #ffffff;
+    --bg-report: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+    --bg-report-card: rgba(255,255,255,0.7);
+    --bg-report-cards-container: #fff3e0;
+    --bg-formula-card: #e3f2fd;
+    --bg-details: #ffffff;
+    --bg-history: #f5f5f5;
+    --bg-history-item: #ffffff;
+    --bg-delta-bar: #f8f9fa;
+    --text: #000000;
+    --text-secondary: #666666;
+    --text-tertiary: #888888;
+    --border: #999999;
+    --border-light: #cccccc;
+    --border-input: #888888;
+    --border-table: #666666;
+    --accent: #0056b3;
+    --accent-hover: #004494;
+    --success: #28a745;
+    --danger: #dc3545;
+    --orange: #ff9800;
+    --shadow: 0 4px 15px rgba(0,0,0,0.2);
+    --radius: 10px;
+}
+
+/* Тёмная тема */
+:root.dark-theme {
+    --bg: #121212;
+    --bg-light: #0a0a0a;
+    --bg-section: #1e1e1e;
+    --bg-table: #252525;
+    --bg-th: #333333;
+    --bg-input: #2d2d2d;
+    --bg-quick-tests: linear-gradient(135deg, #1a1200, #2d1f00);
+    --bg-quick-tests-btn: #252525;
+    --bg-report: linear-gradient(135deg, #0a2e0a, #0a2020);
+    --bg-report-card: #1a1a1a;
+    --bg-report-cards-container: #2d1f00;
+    --bg-formula-card: #0a1a2e;
+    --bg-details: #252525;
+    --bg-history: #1e1e1e;
+    --bg-history-item: #252525;
+    --bg-delta-bar: #252525;
+    --text: #ffffff;
+    --text-secondary: #d0d0d0;
+    --text-tertiary: #888888;
+    --border: #404040;
+    --border-light: #505050;
+    --border-input: #505050;
+    --border-table: #505050;
+    --accent: #5cb3ff;
+    --accent-hover: #7dc4ff;
+    --success: #7dd87d;
+    --danger: #ff6b6b;
+    --orange: #ffb74d;
+    --shadow: 0 4px 15px rgba(0,0,0,0.6);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+    background: var(--bg-light) !important;
+    color: var(--text) !important;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    padding: 15px;
+    line-height: 1.5;
+    transition: background 0.3s, color 0.3s;
+}
+
+.container {
+    max-width: 960px;
+    margin: auto;
+    background: var(--bg) !important;
+    padding: 25px;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
+    transition: background 0.3s, border 0.3s;
+}
+
+h2 {
+    color: var(--accent);
+    border-bottom: 2px solid var(--accent);
+    margin: 0 0 20px 0;
+    padding-bottom: 10px;
+    font-size: 22px;
+}
+
+h2 small { color: var(--text-tertiary); font-size: 14px; font-weight: normal; }
+
+.section {
+    background: var(--bg-section) !important;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    border: 1px solid var(--border);
+    transition: background 0.3s, border 0.3s;
+}
+
+.section strong {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 15px;
+}
+
+/* Таблицы */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--bg-table) !important;
+    margin-top: 10px;
+}
+
+th, td {
+    border: 1px solid var(--border-table);
+    padding: 8px;
+    text-align: center;
+    color: var(--text) !important;
+}
+
+th {
+    background: var(--bg-th) !important;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+/* Поля ввода */
+input[type="number"],
+input[type="text"] {
+    max-width: 100px;
+    padding: 6px 8px;
+    border: 1px solid var(--border-input);
+    background: var(--bg-input) !important;
+    color: var(--text) !important;
+    border-radius: 3px;
+    font-size: 14px;
+    text-align: center;
+}
+
+input[type="number"]:focus,
+input[type="text"]:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px rgba(0,86,179,0.2);
+}
+
+/* Ошибка валидации */
+.input-error {
+    border-color: #dc3545 !important;
+    box-shadow: 0 0 0 2px rgba(220,53,69,0.25) !important;
+    animation: shake 0.3s ease;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-3px); }
+    75% { transform: translateX(3px); }
+}
+
+/* Поля дельт в таблице — компактные */
+.section table input[type="number"] {
+    max-width: 70px;
+    width: 100%;
+}
+
+/* Кнопки */
+.btn-calc {
+    width: 100%;
+    padding: 18px;
+    background: linear-gradient(135deg, var(--accent), #007bff);
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    font-size: 18px;
+    cursor: pointer;
+    font-weight: bold;
+    margin-top: 10px;
+    transition: all 0.2s;
+    letter-spacing: 0.5px;
+}
+
+.btn-calc:hover {
+    background: linear-gradient(135deg, var(--accent-hover), #0069d9);
+    box-shadow: 0 4px 12px rgba(0,86,179,0.4);
+    transform: translateY(-1px);
+}
+
+.btn-calc:active { transform: translateY(0); }
+
+.btn-add {
+    background: var(--success);
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 10px;
+    font-size: 14px;
+    transition: background 0.2s;
+}
+
+.btn-add:hover { background: #218838; }
+
+.btn-clear-history {
+    background: var(--danger);
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 13px;
+    margin-left: 10px;
+}
+
+.btn-clear-history:hover { background: #c82333; }
+
+/* Кнопка смены темы */
+.btn-theme-toggle {
+    position: fixed;
+    top: 15px;
+    right: 15px;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    background: var(--bg);
+    color: var(--text);
+    font-size: 20px;
+    cursor: pointer;
+    z-index: 1000;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow);
+}
+
+.btn-theme-toggle:hover {
+    transform: scale(1.1);
+    border-color: var(--accent);
+}
+
+.btn-calibration-link {
+    position: fixed;
+    top: 15px;
+    right: 70px;
+    padding: 10px 16px;
+    border-radius: 20px;
+    border: 2px solid var(--border);
+    background: var(--bg);
+    color: var(--text);
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    z-index: 1000;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    box-shadow: var(--shadow);
+}
+
+.btn-calibration-link:hover {
+    border-color: var(--accent);
+    transform: scale(1.05);
+}
+
+/* Результат */
+#report {
+    margin-top: 20px;
+    padding: 20px;
+    background: var(--bg-report) !important;
+    border-left: 6px solid var(--success);
+    border-radius: 0 8px 8px 0;
+    display: none;
+    color: var(--text) !important;
+    font-size: 15px;
+    animation: fadeIn 0.3s ease;
+    transition: background 0.3s;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+#report h3 { margin-bottom: 12px; }
+#report hr { border: none; border-top: 1px solid var(--border-light); margin: 15px 0; }
+
+/* Секции отчёта */
+.report-section {
+    padding: 15px;
+    border-radius: 8px;
+    margin: 15px 0;
+}
+
+.report-in-tolerance {
+    background: var(--bg-report);
+    border-left: 5px solid var(--success);
+}
+
+.report-corrections {
+    background: var(--bg-report-cards-container);
+    border-left: 5px solid var(--orange);
+}
+
+.report-new-formula {
+    background: var(--bg-formula-card);
+    border-left: 5px solid var(--accent);
+}
+
+/* Карточки коррекций */
+.correction-card {
+    margin: 8px 0;
+    padding: 12px 15px;
+    background: var(--bg-report-card);
+    border-radius: 6px;
+    border-left: 4px solid var(--success);
+    transition: background 0.3s;
+}
+
+:root:not(.dark-theme) .correction-card {
+    background: #ffffff;
+    border: 1px solid rgba(0,0,0,0.12);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+
+:root.dark-theme .correction-card {
+    background: #1e1e1e;
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+.correction-card .grams {
+    font-size: 18px;
+    font-weight: bold;
+    color: var(--success);
+}
+
+:root.dark-theme .correction-card .grams {
+    color: #81c784;
+}
+
+.correction-card .pigment-name {
+    font-weight: bold;
+    color: var(--text);
+}
+
+:root.dark-theme .correction-card .pigment-name {
+    color: #e0e0e0;
+}
+
+.correction-card .reason {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-top: 4px;
+}
+
+.delta-bar-bg {
+    background: var(--bg-delta-bar);
+    padding: 12px;
+    border-radius: 6px;
+    margin: 10px 0;
+    transition: background 0.3s;
+}
+
+/* Визуализация дельт — градиентные бары */
+.delta-bar-container {
+    margin: 8px 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.delta-bar-label {
+    min-width: 40px;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.delta-bar {
+    flex: 1;
+    height: 28px;
+    border-radius: 4px;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid var(--border);
+}
+
+:root:not(.dark-theme) .delta-bar {
+    border-color: #888;
+}
+
+.delta-bar-value {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    font-weight: bold;
+    font-size: 13px;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.8), 0 0 4px rgba(0,0,0,0.5);
+    color: #ffffff;
+    white-space: nowrap;
+}
+
+/* В тёмной теме — более яркий текст на барах */
+:root.dark-theme .delta-bar-value {
+    text-shadow: 0 1px 3px rgba(0,0,0,1), 0 0 6px rgba(0,0,0,0.8);
+    color: #ffffff;
+}
+
+/* Градиенты для осей */
+.delta-bar-lightness {
+    /* Светлота: от чёрного (слева, тёмное) к белому (справа, светлое) */
+    background: linear-gradient(to right, #000000 0%, #555555 25%, #999999 50%, #cccccc 75%, #ffffff 100%);
+}
+
+.delta-bar-redgreen {
+    /* a-ось: от зелёного (слева, -a) к красному (справа, +a) */
+    background: linear-gradient(to right, #00b300 0%, #66cc66 25%, #ffffff 50%, #ff6666 75%, #cc0000 100%);
+}
+
+.delta-bar-yellowblue {
+    /* b-ось: от синего (слева, -b) к жёлтому (справа, +b) */
+    background: linear-gradient(to right, #0066cc 0%, #3399ff 25%, #ffffff 50%, #ffe066 75%, #ffcc00 100%);
+}
+
+/* Индикаторы отклонения */
+.deviation-tag {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: bold;
+    margin: 2px;
+}
+
+.deviation-tag.dark {
+    background: #37474f;
+    color: #eceff1;
+}
+
+.deviation-tag.light {
+    background: #f5f5f5;
+    color: #333;
+    border: 1px solid #ccc;
+}
+
+.deviation-tag.red {
+    background: #ffebee;
+    color: #c62828;
+    border: 1px solid #ef9a9a;
+}
+
+.deviation-tag.green {
+    background: var(--bg-report);
+    color: var(--success);
+    border: 1px solid #a5d6a7;
+}
+
+.deviation-tag.yellow {
+    background: #fff8e1;
+    color: #f57f17;
+    border: 1px solid #ffe082;
+}
+
+.deviation-tag.blue {
+    background: #e3f2fd;
+    color: #1565c0;
+    border: 1px solid #90caf9;
+}
+
+.deviation-tag.ok {
+    background: var(--bg-report);
+    color: var(--success);
+    border: 1px solid #4caf50;
+}
+
+/* Формула — строки компонентов */
+.formula-row {
+    display: grid;
+    grid-template-columns: auto 130px auto 90px;
+    align-items: start;
+    gap: 4px 8px;
+    margin-bottom: 8px;
+}
+
+.formula-row input { width: 100%; text-align: center; }
+
+/* Метки */
+.label-code {
+    font-size: 13px;
+    white-space: nowrap;
+    align-self: center;
+}
+
+.label-gram {
+    font-size: 13px;
+    white-space: nowrap;
+    align-self: center;
+}
+
+/* Обёртка для кода + названия */
+.code-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.code-wrapper input.c-code {
+    margin-bottom: 1px;
+}
+
+/* Название пигмента под кодом */
+.pigment-label {
+    font-size: 11px;
+    color: #666;
+    font-style: italic;
+    min-height: 15px;
+    line-height: 15px;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: center;
+}
+
+/* История */
+.history-panel {
+    margin-top: 20px;
+    padding: 15px;
+    background: #f5f5f5 !important;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+}
+
+.history-panel h4 {
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.history-item {
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 10px 12px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 13px;
+}
+
+.history-item:hover {
+    border-color: var(--blue);
+    box-shadow: 0 2px 8px rgba(0,86,179,0.15);
+}
+
+.history-item .history-date {
+    font-size: 11px;
+    color: #888;
+}
+
+.history-item .history-summary {
+    margin-top: 4px;
+    color: #333;
+}
+
+.history-empty {
+    color: #999;
+    font-style: italic;
+    font-size: 14px;
+}
+
+/* Детали */
+details {
+    margin-top: 15px;
+    background: white;
+    border-radius: 6px;
+    border: 1px solid #ddd;
+}
+
+details summary {
+    cursor: pointer;
+    padding: 10px 15px;
+    font-size: 14px;
+    color: #666;
+    user-select: none;
+}
+
+details summary:hover { color: var(--blue); }
+
+details table { margin: 0; }
+
+/* Утилиты */
+.text-center { text-align: center; }
+.mt-10 { margin-top: 10px; }
+.mb-10 { margin-bottom: 10px; }
+
+/* Адаптивность */
+@media (max-width: 700px) {
+    .container { padding: 15px; }
+    h2 { font-size: 18px; }
+    .grid-2 { grid-template-columns: 1fr !important; }
+    .test-buttons { grid-template-columns: 1fr !important; }
+}
+
+/* Панель быстрых тестов */
+.quick-tests-panel {
+    margin-top: 15px;
+    padding: 20px;
+    background: linear-gradient(135deg, #fff9c4, #fff3e0);
+    border-radius: 10px;
+    border: 2px solid #ffb74d;
+}
+
+.quick-tests-panel h4 {
+    margin-bottom: 15px;
+    color: #e65100;
+    font-size: 16px;
+}
+
+/* Кнопка переключения быстрых тестов */
+.btn-quick-tests-toggle {
+    width: 100%;
+    padding: 14px 20px;
+    background: linear-gradient(135deg, #fff9c4, #fff3e0);
+    color: #e65100;
+    border: 2px solid #ffb74d;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    transition: all 0.2s;
+    margin-top: 20px;
+    text-align: left;
+}
+
+.btn-quick-tests-toggle:hover {
+    background: linear-gradient(135deg, #fff3e0, #ffe0b2);
+    box-shadow: 0 2px 8px rgba(255,183,77,0.3);
+}
+
+.btn-quick-tests-toggle:active {
+    transform: scale(0.99);
+}
+
+.btn-quick-tests-toggle.expanded {
+    border-radius: 10px 10px 0 0;
+    margin-top: 25px;
+    margin-bottom: 0;
+}
+
+.test-buttons {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 10px;
+}
+
+.btn-test {
+    background: white;
+    color: #333;
+    border: 2px solid #ffb74d;
+    padding: 12px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.2s;
+    text-align: center;
+}
+
+.btn-test:hover {
+    background: #ffb74d;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(255,183,77,0.4);
+}
+
+.btn-test:active {
+    transform: translateY(0);
+}
