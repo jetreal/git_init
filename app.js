@@ -662,7 +662,8 @@ function calculate() {
     let reportHtml = '';
 
     // Проверка на пустую формулу нужна только в Обычном режиме
-    const isExpressMode = document.getElementById('expressModeToggle')?.checked || false;
+    // Используем ту же переменную expressMode, что и в toggleMode
+    const isExpressMode = expressMode;
 
     if (!isExpressMode && sumGpl === 0) {
         reportHtml += '<h3>📊 Результат анализа</h3>';
