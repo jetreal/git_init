@@ -361,7 +361,7 @@ function toggleQuickTests() {
 // Итеративная минимизация ΔE с приоритетом правильного направления
 // ============================================================
 function calculateCorrection(avgDL, avgDA, avgDB, currentFormula, testWeight = 200) {
-    const tolerance = 0.15;
+    const tolerance = 0.08;
     const step = 0.25;
     const maxIter = 400;
     const minImprovement = 0.001;
