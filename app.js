@@ -661,7 +661,10 @@ function calculate() {
 
     let reportHtml = '';
 
-    if (sumGpl === 0) {
+    // Проверка на пустую формулу нужна только в Обычном режиме
+    const isExpressMode = document.getElementById('expressModeToggle')?.checked || false;
+
+    if (!isExpressMode && sumGpl === 0) {
         reportHtml += '<h3>📊 Результат анализа</h3>';
         reportHtml += '<span style="color:var(--red);">⚠️ Ошибка: Введите граммы в формулу!</span>';
 
