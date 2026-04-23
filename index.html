@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nason Lab v5.1</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<button class="btn-theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Сменить тему">🌙</button>
+<a href="calibration.html" class="btn-calibration-link" title="Калибровка пигментов">🧪 Калибровка</a>
+
+<div class="container">
+    <h2>Nason Lab: Расчет и Корректировка <small>(v5.1)</small></h2>
+
+    <div style="display:grid;grid-template-columns:1.3fr 1fr;gap:20px;">
+        <!-- ЛЕВАЯ КОЛОНКА: ДАННЫЕ ПРИБОРА -->
+        <div>
+            <div class="section">
+                <strong>1. Вес текущего теста:</strong>
+                <input type="number" id="currentWeight" value="200" style="width:70px;"> г.
+            </div>
+            <div class="section">
+                <strong>2. Дельты спектрофотометра:</strong>
+                <table>
+                    <tr><th>Угол</th><th>dL</th><th>da</th><th>db</th></tr>
+                    <tr><td>15°</td><td><input type="number" id="l15" step="0.01" value="-0.80" oninput="validateDelta(this)" onblur="formatDelta(this)" onkeypress="if(event.keyCode===13){this.blur();return false;} return /[0-9.\-]/.test(String.fromCharCode(event.keyCode))"></td><td><input type="number" id="a15" step="0.01" value="0.40" oninput="validateDelta(this)" onblur="formatDelta(this)" onkeypress="if(event.keyCode===13){this.blur();return false;} return /[0-9.\-]/.test(String.fromCharCode(event.keyCode))"></td><td><input type="number" id="b15" step="0.01" value="-0.20" oninput="validateDelta(this)" onblur="formatDelta(this)" onkeypress="if(event.keyCode===13){this.blur();return false;} return /[0-9.\-]/.test(String.fromCharCode(event.keyCode))"></td></tr>
+                    <tr><td>45°</td><td><input type="number" id="l45" step="0.01" value="-0.60" oninput="validateDelta(this)" onblur="formatDelta(this)" onkeypress="if(event.keyCode===13){this.blur();return false;} return /[0-9.\-]/.test(String.fromCharCode(event.keyCode))"></td><td><input type="number" id="a45" step="0.01" value="0.30" oninput="validateDelta(this)" onblur="formatDelta(this)" onkeypress="if(event.keyCode===13){this.blur();return false;} return /[0-9.\-]/.test(String.fromCharCode(event.keyCode))"></td><td><input type="number" id="b45" step="0.01" value="-0.10" oninput="validateDelta(this)" onblur="formatDelta(this)" onkeypress="if(event.keyCode===13){this.blur();return false;} return /[0-9.\-]/.test(String.fromCharCode(event.keyCode))"></td></tr>
+                    <tr><td>110°</td><td><input type="number" id="l110" step="0.01" value="-0.90" oninput="validateDelta(this)" onblur="formatDelta(this)" onkeypress="if(event.keyCode===13){this.blur();return false;} return /[0-9.\-]/.test(String.fromCharCode(event.keyCode))"></td><td><input type="number" id="a110" step="0.01" value="0.50" oninput="validateDelta(this)" onblur="formatDelta(this)" onkeypress="if(event.keyCode===13){this.blur();return false;} return /[0-9.\-]/.test(String.fromCharCode(event.keyCode))"></td><td><input type="number" id="b110" step="0.01" value="-0.30" oninput="validateDelta(this)" onblur="formatDelta(this)" onkeypress="if(event.keyCode===13){this.blur();return false;} return /[0-9.\-]/.test(String.fromCharCode(event.keyCode))"></td></tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- ПРАВАЯ КОЛОНКА: ФОРМУЛА -->
+        <div class="section">
+            <strong>3. Исходная формула (на 1 литр):</strong>
+            <div id="formulaInputs">
+                <div class="formula-row">
+                    <span class="label-code">Код:</span>
+                    <div class="code-wrapper"><input type="text" class="c-code" value="802B" placeholder="N-400B" oninput="showPigmentName(this)" onkeypress="return handleCodeEnter(event)"><span class="pigment-label"></span></div>
+                    <span class="label-gram">Грам:</span>
+                    <input type="number" class="c-val" value="450" placeholder="0.0" min="0" step="0.01" oninput="validateGrams(this)" onblur="formatGrams(this)" onkeypress="if(event.keyCode===13){this.blur();return false;} return /[0-9.\-]/.test(String.fromCharCode(event.keyCode))">
+                </div>
+                <div class="formula-row">
+                    <span class="label-code">Код:</span>
+                    <div class="code-wrapper"><input type="text" class="c-code" value="104B" placeholder="N-400B" oninput="showPigmentName(this)" onkeypress="return handleCodeEnter(event)"><span class="pigment-label"></span></div>
+                    <span class="label-gram">Грам:</span>
+                    <input type="number" class="c-val" value="280" placeholder="0.0" min="0" step="0.01" oninput="validateGrams(this)" onblur="formatGrams(this)" onkeypress="if(event.keyCode===13){this.blur();return false;} return /[0-9.\-]/.test(String.fromCharCode(event.keyCode))">
+                </div>
+                <div class="formula-row">
+                    <span class="label-code">Код:</span>
+                    <div class="code-wrapper"><input type="text" class="c-code" value="101B" placeholder="N-400B" oninput="showPigmentName(this)" onkeypress="return handleCodeEnter(event)"><span class="pigment-label"></span></div>
+                    <span class="label-gram">Грам:</span>
+                    <input type="number" class="c-val" value="120" placeholder="0.0" min="0" step="0.01" oninput="validateGrams(this)" onblur="formatGrams(this)" onkeypress="if(event.keyCode===13){this.blur();return false;} return /[0-9.\-]/.test(String.fromCharCode(event.keyCode))">
+                </div>
+                <div class="formula-row">
+                    <span class="label-code">Код:</span>
+                    <div class="code-wrapper"><input type="text" class="c-code" value="N-400B" placeholder="N-400B" oninput="showPigmentName(this)" onkeypress="return handleCodeEnter(event)"><span class="pigment-label"></span></div>
+                    <span class="label-gram">Грам:</span>
+                    <input type="number" class="c-val" value="35" placeholder="0.0" min="0" step="0.01" oninput="validateGrams(this)" onblur="formatGrams(this)" onkeypress="if(event.keyCode===13){this.blur();return false;} return /[0-9.\-]/.test(String.fromCharCode(event.keyCode))">
+                </div>
+                <div class="formula-row">
+                    <span class="label-code">Код:</span>
+                    <div class="code-wrapper"><input type="text" class="c-code" value="212B" placeholder="N-400B" oninput="showPigmentName(this)" onkeypress="return handleCodeEnter(event)"><span class="pigment-label"></span></div>
+                    <span class="label-gram">Грам:</span>
+                    <input type="number" class="c-val" value="65" placeholder="0.0" min="0" step="0.01" oninput="validateGrams(this)" onblur="formatGrams(this)" onkeypress="if(event.keyCode===13){this.blur();return false;} return /[0-9.\-]/.test(String.fromCharCode(event.keyCode))">
+                </div>
+                <div class="formula-row">
+                    <span class="label-code">Код:</span>
+                    <div class="code-wrapper"><input type="text" class="c-code" value="106B" placeholder="N-400B" oninput="showPigmentName(this)" onkeypress="return handleCodeEnter(event)"><span class="pigment-label"></span></div>
+                    <span class="label-gram">Грам:</span>
+                    <input type="number" class="c-val" value="50" placeholder="0.0" min="0" step="0.01" oninput="validateGrams(this)" onblur="formatGrams(this)" onkeypress="if(event.keyCode===13){this.blur();return false;} return /[0-9.\-]/.test(String.fromCharCode(event.keyCode))">
+                </div>
+            </div>
+            <button class="btn-add" onclick="addRow()">+ Добавить компонент</button>
+        </div>
+    </div>
+
+    <button class="btn-calc" onclick="calculate()">АНАЛИЗИРОВАТЬ И ПЕРЕСЧИТАТЬ</button>
+
+    <!-- ПАНЕЛЬ БЫСТРЫХ ТЕСТОВ -->
+    <button class="btn-quick-tests-toggle" onclick="toggleQuickTests()">🧪 Быстрые тесты ▾</button>
+    <div class="quick-tests-panel" id="quickTestsPanel" style="display:none;">
+        <h4>🧪 Быстрые тесты — нажми, чтобы загрузить и рассчитать</h4>
+        <div class="test-buttons">
+            <button class="btn-test" onclick="loadPreset('silver')">⚪ Серебристый металлик</button>
+            <button class="btn-test" onclick="loadPreset('red')">🔴 Красный яркий</button>
+            <button class="btn-test" onclick="loadPreset('blue')">🔵 Синий глубокий</button>
+            <button class="btn-test" onclick="loadPreset('white_pearl')">⚪ Белый перламутр</button>
+            <button class="btn-test" onclick="loadPreset('black')">⚫ Чёрный глубокий</button>
+            <button class="btn-test" onclick="loadPreset('yellow')">🟡 Жёлтый лимон</button>
+            <button class="btn-test" onclick="loadPreset('green')">🟢 Зелёный изумруд</button>
+            <button class="btn-test" onclick="loadPreset('grey')">⚫ Серый нейтральный</button>
+            <button class="btn-test" onclick="loadPreset('orange')">🟠 Оранжевый</button>
+            <button class="btn-test" onclick="loadPreset('violet')">🟣 Фиолетовый</button>
+            <button class="btn-test" onclick="loadPreset('too_light')">⬆️ Слишком светло</button>
+            <button class="btn-test" onclick="loadPreset('too_dark')">⬇️ Слишком тёмно</button>
+            <button class="btn-test" onclick="loadPreset('too_red')">➡️ Слишком красно</button>
+            <button class="btn-test" onclick="loadPreset('too_blue')">⬅️ Слишком сине</button>
+        </div>
+    </div>
+
+    <div id="report"></div>
+
+    <!-- ИСТОРИЯ -->
+    <div class="history-panel" id="historyContainer">
+        <h4>📜 История расчётов</h4>
+        <p class="history-empty">Нажмите «Анализировать» для сохранения.</p>
+    </div>
+
+    <!-- ЭКСПОРТ КАЛИБРОВКИ -->
+    <div class="history-panel" id="calExportPanel" style="display:none;">
+        <h4>✅ Откалиброванные пигменты</h4>
+        <p id="calExportInfo" style="font-size:13px;color:var(--text-secondary);"></p>
+        <button class="btn-cal" style="font-size:13px;padding:8px 16px;cursor:pointer;" onclick="exportCalibratedFromMain()">📥 Скачать обновлённую базу (JSON)</button>
+    </div>
+</div>
+
+<script src="app.js"></script>
+<script src="test.js"></script>
+<script>
+// Экспорт калибровки с главной страницы
+function exportCalibratedFromMain() {
+    const calibrated = getCalibratedVectors();
+    if (Object.keys(calibrated).length === 0) {
+        alert('Нет откалиброванных пигментов. Сначала откалибруйте пигменты на странице калибровки.');
+        return;
+    }
+    const exportData = {
+        system: 'Nason Basecoat Tint (Calibrated)',
+        version: '5.1',
+        calibratedDate: new Date().toISOString(),
+        note: 'Векторы influence рассчитаны по реальным выкрасам.',
+        calibratedPigments: {}
+    };
+    for (const [code, data] of Object.entries(calibrated)) {
+        exportData.calibratedPigments[`N-${code}`] = {
+            influence: { dL: data.dL, da: data.da, db: data.db },
+            measuredGrams: data.grams,
+            baseWeight: data.baseWeight,
+            measuredDate: data.date
+        };
+    }
+    const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `nason-calibrated-vectors-${new Date().toISOString().slice(0,10)}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+}
+</script>
+</body>
+</html>
