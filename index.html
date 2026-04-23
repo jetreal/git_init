@@ -12,9 +12,20 @@
 <a href="calibration.html" class="btn-calibration-link" title="Калибровка пигментов">🧪 Калибровка</a>
 
 <div class="container">
-    <h2>Nason Lab: Расчет и Корректировка <small>(v5.1)</small></h2>
+    <h2>Nason Lab: Расчет и Корректировка <small>(v5.2)</small></h2>
 
-    <div style="display:grid;grid-template-columns:1.3fr 1fr;gap:20px;">
+    <!-- ПЕРЕКЛЮЧАТЕЛЬ РЕЖИМОВ -->
+    <div class="mode-switch-container" style="margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+        <span style="font-weight: bold; color: var(--text-primary);">Режим работы:</span>
+        <label class="switch">
+            <input type="checkbox" id="modeToggle" onchange="toggleMode()">
+            <span class="slider"></span>
+        </label>
+        <span id="modeLabel" style="font-weight: bold; color: var(--accent-color);">Обычный</span>
+        <span style="color: var(--text-secondary); font-size: 13px;">(Экспресс — без формулы)</span>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1.3fr 1fr;gap:20px;" id="mainGrid">
         <!-- ЛЕВАЯ КОЛОНКА: ДАННЫЕ ПРИБОРА -->
         <div>
             <div class="section">
@@ -33,7 +44,7 @@
         </div>
 
         <!-- ПРАВАЯ КОЛОНКА: ФОРМУЛА -->
-        <div class="section">
+        <div class="section" id="formulaSection">
             <strong>3. Исходная формула (на 1 литр):</strong>
             <div id="formulaInputs">
                 <div class="formula-row">
@@ -56,6 +67,16 @@
                 </div>
             </div>
             <button class="btn-add" onclick="addRow()">+ Добавить компонент</button>
+        </div>
+
+        <!-- ЭКСПРЕСС РЕЖИМ: ИНФО БЛОК (скрыт по умолчанию) -->
+        <div class="section" id="expressInfoSection" style="display:none;">
+            <strong style="color: var(--accent-color);">🚀 Экспресс-режим</strong>
+            <p style="font-size: 13px; color: var(--text-secondary); margin-top: 10px;">
+                Расчет корректировки производится напрямую от веса в стакане и текущих дельт.<br>
+                Используется упрощенная логика на основе силы пигментов системы <strong>Nason Basecoat Tint</strong>.<br>
+                Формула на литр не требуется.
+            </p>
         </div>
     </div>
 

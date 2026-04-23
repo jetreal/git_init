@@ -1065,3 +1065,163 @@ function toggleTheme() {
     btn.textContent = isDark ? '☀️' : '🌙';
     localStorage.setItem('nason-theme', isDark ? 'dark' : 'light');
 }
+
+// ============================================================
+// ЭКСПРЕСС РЕЖИМ — ПЕРЕКЛЮЧЕНИЕ И ЛОГИКА
+// ============================================================
+let expressMode = false;
+
+function toggleMode() {
+    const toggle = document.getElementById('modeToggle');
+    const label = document.getElementById('modeLabel');
+    const formulaSection = document.getElementById('formulaSection');
+    const expressInfoSection = document.getElementById('expressInfoSection');
+    
+    expressMode = toggle.checked;
+    
+    if (expressMode) {
+        label.textContent = 'Экспресс';
+        formulaSection.style.display = 'none';
+        expressInfoSection.style.display = 'block';
+    } else {
+        label.textContent = 'Обычный';
+        formulaSection.style.display = 'block';
+        expressInfoSection.style.display = 'none';
+    }
+}
+
+// Экспресс расчет корректировки (упрощенный, без формулы на литр)
+function calculateExpressCorrection(avgDL, avgDA, avgDB, testWeight = 200) {
+    const tolerance = 0.08;
+    
+    // Проверяем, находится ли цвет в допуске
+    if (Math.abs(avgDL) <= tolerance && Math.abs(avgDA) <= tolerance && Math.abs(avgDB) <= tolerance) {
+        return { corrections: [], message: 'Цвет в допуске (ΔE < 0.08)', remainingDelta: { dL: avgDL, da: avgDA, db: avgDB } };
+    }
+    
+    const corrections = [];
+    const BASE_WEIGHT = 200;
+    const scale = testWeight / BASE_WEIGHT;
+    
+    // Определяем направления коррекции
+    const targetDirDL = avgDL > tolerance ? -1 : avgDL < -tolerance ? 1 : 0;
+    const targetDirDA = avgDA > tolerance ? -1 : avgDA < -tolerance ? 1 : 0;
+    const targetDirDB = avgDB > tolerance ? -1 : avgDB < -tolerance ? 1 : 0;
+    
+    // Подбираем пигменты для каждого направления
+    // L: слишком светло (avgDL > 0) → нужен пигмент с negative dL (затемняющий)
+    // a: слишком красно (avgDA > 0) → нужен пигмент с negative da (зеленящий)
+    // b: слишком желто (avgDB > 0) → нужен пигмент с negative db (синящий)
+    
+    let remainingDL = avgDL;
+    let remainingDA = avgDA;
+    let remainingDB = avgDB;
+    
+    // Функция подбора лучшего пигмента для оси
+    function findBestPigmentForAxis(axis, targetDir, currentRemaining) {
+        if (targetDir === 0) return null;
+        
+        let bestPigment = null;
+        let bestScore = 0;
+        
+        for (const [code, p] of Object.entries(NASON_PIGMENTS)) {
+            const inf = p.influence;
+            let value = 0;
+            
+            if (axis === 'dL') value = inf.dL;
+            else if (axis === 'da') value = inf.da;
+            else if (axis === 'db') value = inf.db;
+            
+            // Проверяем направление: пигмент должен работать в нужном направлении
+            const pigmentDir = value > 0 ? 1 : value < 0 ? -1 : 0;
+            
+            // Нам нужен пигмент, который движется ПРОТИВ отклонения
+            // Если avgDL > 0 (слишком светло), нужен пигмент с negative dL (pigmentDir = -1)
+            // targetDir = -1 в этом случае, значит pigmentDir должен совпадать с targetDir
+            if (pigmentDir !== targetDir) continue;
+            
+            // Сила пигмента (абсолютное значение)
+            const strength = Math.abs(value);
+            if (strength > bestScore) {
+                bestScore = strength;
+                bestPigment = { code, ...p, axisValue: value };
+            }
+        }
+        
+        return bestPigment;
+    }
+    
+    // Коррекция по L
+    if (targetDirDL !== 0) {
+        const pigment = findBestPigmentForAxis('dL', targetDirDL, remainingDL);
+        if (pigment) {
+            const neededChange = -remainingDL; // нужно компенсировать отклонение
+            const gramsNeeded = Math.abs(neededChange / pigment.axisValue) * scale;
+            const clampedGrams = Math.min(gramsNeeded, pigment.maxAdd * scale);
+            
+            if (clampedGrams > 0.1) {
+                corrections.push({
+                    code: `N-${pigment.code}B`,
+                    name: pigment.name,
+                    grams: Math.round(clampedGrams * 100) / 100,
+                    reason: `Коррекция светлоты (dL = ${avgDL.toFixed(2)})`
+                });
+                remainingDL += pigment.axisValue * (clampedGrams / scale);
+            }
+        }
+    }
+    
+    // Коррекция по a
+    if (targetDirDA !== 0) {
+        const pigment = findBestPigmentForAxis('da', targetDirDA, remainingDA);
+        if (pigment) {
+            const neededChange = -remainingDA;
+            const gramsNeeded = Math.abs(neededChange / pigment.axisValue) * scale;
+            const clampedGrams = Math.min(gramsNeeded, pigment.maxAdd * scale);
+            
+            if (clampedGrams > 0.1) {
+                corrections.push({
+                    code: `N-${pigment.code}B`,
+                    name: pigment.name,
+                    grams: Math.round(clampedGrams * 100) / 100,
+                    reason: `Коррекция красно-зеленого (da = ${avgDA.toFixed(2)})`
+                });
+                remainingDA += pigment.axisValue * (clampedGrams / scale);
+            }
+        }
+    }
+    
+    // Коррекция по b
+    if (targetDirDB !== 0) {
+        const pigment = findBestPigmentForAxis('db', targetDirDB, remainingDB);
+        if (pigment) {
+            const neededChange = -remainingDB;
+            const gramsNeeded = Math.abs(neededChange / pigment.axisValue) * scale;
+            const clampedGrams = Math.min(gramsNeeded, pigment.maxAdd * scale);
+            
+            if (clampedGrams > 0.1) {
+                corrections.push({
+                    code: `N-${pigment.code}B`,
+                    name: pigment.name,
+                    grams: Math.round(clampedGrams * 100) / 100,
+                    reason: `Коррекция желто-синего (db = ${avgDB.toFixed(2)})`
+                });
+                remainingDB += pigment.axisValue * (clampedGrams / scale);
+            }
+        }
+    }
+    
+    if (corrections.length === 0) {
+        return { 
+            corrections: [], 
+            message: 'Не найдено подходящих пигментов для коррекции. Проверьте дельты.',
+            remainingDelta: { dL: avgDL, da: avgDA, db: avgDB }
+        };
+    }
+    
+    return {
+        corrections,
+        message: 'Рекомендуемая корректировка (Экспресс-режим)',
+        remainingDelta: { dL: remainingDL, da: remainingDA, db: remainingDB }
+    };
+}
